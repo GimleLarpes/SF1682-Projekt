@@ -1,6 +1,0 @@
-dtheta/dt = (wR - wL)/b %konstant
-theta(t) = t/b*(wR - wL) + theta0
-dx/dt = (wR + wL)/2*cos(t/b*(wR - wL) + theta0)
-dy/dt = (wR + wL)/2*sin(t/b*(wR - wL) + theta0)
-
-function [xbar, ybar, R, Tlap] = robotcircle(b, wL, wR, x0, y0, theta0)
