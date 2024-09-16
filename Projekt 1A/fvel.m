@@ -8,7 +8,7 @@ vL = aL*t + wL;
 v = (vR + vL)/2;
 
 dx = v*cos(theta);
-dy = v*sin(theta;
+dy = v*sin(theta);
 
 dtheta = (vR - vL)/b;
 
