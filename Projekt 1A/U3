@@ -1,14 +1,26 @@
 %% a) 
-s = [x, y, theta]
-
-% dx/dt = v(t)cos(theta(t)) (1a)
-% dy/dt = v(t)sin(theta(t)) (1b)
-
-% dtheta/dt = (vR(t) - vL(t))/b (3)
 
 function ds=fvel(t, s, b, aL, aR, wL, wR)
 
+x = s(1);
+y = s(2);
+theta = s(3);
+vR = aR*t + wR;
+vL = aL*t + wL;
+v = (vR + vL)/2;
+
+dx = v*cos(theta);
+dy = v*sin(theta;
+
+dtheta = (vR - vL)/b;
+
+ds = [dx, dy, dtheta];
+
+end
+
 %% b)
+
+
 
 %% c)
 b = 1
