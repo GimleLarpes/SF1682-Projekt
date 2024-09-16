@@ -1,1 +1,38 @@
+%% a) 
+s = [x, y, theta]
 
+% dx/dt = v(t)cos(theta(t)) (1a)
+% dy/dt = v(t)sin(theta(t)) (1b)
+
+% dtheta/dt = (vR(t) - vL(t))/b (3)
+
+function ds=fvel(t, s, b, aL, aR, wL, wR)
+
+%% b)
+
+%% c)
+b = 1
+aR = 0
+aL = aR
+wL = 4
+wR = 2
+theta0 = 0
+% sätt x0 och y0 så att mittpunkten för cirkelrörelsen är (0, 0)
+% välj sluttid så att roboten kör ett varv
+% sätt deltat så att den tar 100 tidssteg
+% plotta x(t) och y(t) i en plot.
+% kontrollera att mittpunkten och radien blir som förväntat
+
+%% d) 
+% använd b) och c) och gör Range-Kutta 4 med samma parametrar, plotta cirklarna från c) och d) i samma plot.
+% kör Euler med 1/10 så stort tidssteg och plotta igen. Slutsats?
+
+%% e)
+tend = 7*pi/8
+N = 100
+deltat = tend/N
+
+% vad blir felen i x vid sluttiden för de två metoderna?
+
+%% f)
+% beräkna numeriska lösningar, fel vid sluttiden och noggrannhetsordningar med deltat, deltat/2, deltat/4.
