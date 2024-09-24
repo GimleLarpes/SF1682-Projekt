@@ -18,7 +18,21 @@ end
 
 %% b) Skriv ett MATLAB-program som anvander funktionen fvel och med framat Euler (FE) 
 %beraknar en approximation till s(t) = [x(t), y(t), θ(t)] fram till en given sluttid.
+%%FÖRKORTAD
+t=0.2; s=[0.9 -0.2 0.32]; b=1; aL=1; aR=0.8; wL=0.5; wR=0.8;
 
+T=10;
+
+n = 100;
+h = T/n;
+
+while t<T 
+    t = t + h;
+    ds = fvel(t,s,b,aL,aR,wL,wR);
+    s = s + ds*h;
+end
+
+%%ORGINAL
 t=0.2;
 s=[0 0 0]; 
 b=1;
@@ -72,12 +86,33 @@ hold off
 s
 
 %% c)
-b = 1
-aR = 0
-aL = aR
-wL = 4
-wR = 2
-theta0 = 0
+x0=0;
+y0=1.5;
+t=0; s=[x0 y0 0]; b=1; aL=0; aR=0; wL=4; wR=2;
+
+
+D=(wR-wL)/b;
+T=abs(2*pi/D);
+
+n = 100;
+h = T/n;
+
+X=[];
+Y=[];
+
+while t<T 
+    t = t + h;
+    ds = fvel(t,s,b,aL,aR,wL,wR);
+    s = s + ds*h;
+
+    X = cat(1, X, s(1));
+    Y = cat(1, Y, s(2));
+end
+plot(X, Y)
+axis equal
+%mean(X)
+%mean(Y)
+
 % sätt x0 och y0 så att mittpunkten för cirkelrörelsen är (0, 0)
 % välj sluttid så att roboten kör ett varv
 % sätt deltat så att den tar 100 tidssteg
