@@ -18,9 +18,60 @@ ds = [dx, dy, dtheta];
 
 end
 
-%% b)
+%% b) Skriv ett MATLAB-program som anvander funktionen fvel och med framat Euler (FE) 
+%beraknar en approximation till s(t) = [x(t), y(t), θ(t)] fram till en given sluttid.
 
+t=0.2;
+s=[0 0 0]; 
+b=1;
+aL=1;
+aR=0.8;
+wL=0.5;
+wR=0.8;
+D = (wR-wL)/b;
+T = 10;
+n = 100;
+h = T/n;
 
+x = 0;
+y = 0;
+theta = 0;
+
+X = [];
+Y = [];
+Theta = [];
+hold on
+for i = n
+    t = 0;
+    x = 0;
+    y = 0;
+    theta = 0;
+    X = [];
+    Y = [];
+    Theta = [];
+    h=T/n;
+    while t < T
+        ds=fvel(t, s, b, aL, aR, wL, wR);
+        %dx=s(1);
+        %dy=s(2);
+        %dtheta=s(3);
+        t1 = t + h;
+        t = t1;
+        %x1 = x + h*dx;
+        %x = x1;
+        %y1 = y + h*dy;      
+        %y = y1;
+        %theta1 = theta + h*dtheta;
+        %theta = theta1;
+        s = s + h.*ds;
+        X = [X, s(1)];
+        Y = [Y, s(2)];
+        Theta = [Theta, s(3)];
+        %s=[x;y;theta];
+    end
+end
+hold off
+s
 
 %% c)
 b = 1
