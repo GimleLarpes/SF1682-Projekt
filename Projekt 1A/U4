@@ -1,21 +1,19 @@
 b=1; aL=0; aR=0; wL=4; wR=2;
 B = (wR+wL)/2;
 D = (wR-wL)/b;
+theta0=0;
 x0=(B/D)*sin(theta0);
 y0=-(B/D)*cos(theta0);
-theta0=0;
+s=[x0 y0 theta0];
 initial_values = [x0;y0;theta0];
 tspan = [0 pi];
-%s=[0.9 -0.2 0.32];
-s=[x0 y0 theta0]
 
 options = odeset('RelTol',1e-8,'AbsTol',1e-8,'Refine',1);
 
-[t,y45] = ode45(@(t,y) fvel(t, s, b, aL, aR, wL, wR),tspan,initial_values,options)
+[t,y45] = ode45(@(t,y) fvel(t, y, b, aL, aR, wL, wR),tspan,initial_values,options)
 time_steps = length(t)
 
-plot(y45(:,1),y45(:,2))
-
+%%
 analytic_solution_x = zeros(size(t));
 analytic_solution_y = zeros(size(t));
 
@@ -24,9 +22,9 @@ for i = 1:length(t)
     analytic_solution_x(i) = x;
     analytic_solution_y(i) = y;
 end
-%%
-e_x = abs(analytic_solution_x - y45(:,1))
-e_y = abs(analytic_solution_y - y45(:,2))
+
+e_x = abs(analytic_solution_x - y45(:,1));
+e_y = abs(analytic_solution_y - y45(:,2));
 
 plot(e_x,'b')
 title('Felet e i x-och y-positionerna som funktion av tiden t')
