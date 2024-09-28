@@ -1,7 +1,5 @@
 function ds=fvel(t, s, b, aL, aR, wL, wR)
-    % Läser x, y , theta från s
-    x = s(1);
-    y = s(2);
+    % Läser theta från s
     theta = s(3);
 
     vR = aR*t + wR;
