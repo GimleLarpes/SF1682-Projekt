@@ -14,5 +14,5 @@ function ds=fvel(t, s, b, aL, aR, wL, wR)
 
     dtheta = (vR - vL)/b;
 
-    ds = [dx, dy, dtheta];
+    ds = [dx; dy; dtheta];
 end
