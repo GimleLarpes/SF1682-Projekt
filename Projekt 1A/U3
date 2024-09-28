@@ -16,6 +16,9 @@ function ds=fvel(t, s, b, aL, aR, wL, wR)
     ds = [dx; dy; dtheta];
 end
 
+
+
+
 %% b) Skriv ett MATLAB-program som anvander funktionen fvel och med framat Euler (FE) 
 %beraknar en approximation till s(t) = [x(t), y(t), θ(t)] fram till en given sluttid.
 %%FÖRKORTAD
@@ -85,6 +88,9 @@ end
 hold off
 s
 
+
+
+
 %% c)
 x0=0;
 y0=1.5;
@@ -119,9 +125,77 @@ axis equal
 % plotta x(t) och y(t) i en plot.
 % kontrollera att mittpunkten och radien blir som förväntat
 
+
+
+
 %% d) 
 % använd b) och c) och gör Range-Kutta 4 med samma parametrar, plotta cirklarna från c) och d) i samma plot.
 % kör Euler med 1/10 så stort tidssteg och plotta igen. Slutsats?
+% Noterar - RK4 är noggrannare med 100 steg än euler med 1000 steg, alltså är RK4 mycket bättre metod i (iaf i detta fall)
+x0=0;
+y0=1.5;
+s=[x0; y0; 0]; b=1; aL=0; aR=0; wL=4; wR=2;
+
+
+D=(wR-wL)/b;
+T=abs(2*pi/D);
+
+n = 100;%Antal Euler steg
+nr = n; %Antal RK steg
+n2=n*10;
+
+tspan = [0, T];
+options = odeset('RelTol',1e-8,'AbsTol',1e-8,'Refine',1);
+[tv,yv] = rk4(@(t,y) fvel(t, y, b, aL, aR, wL, wR), tspan, s, nr);
+
+%Plot
+Xr = yv(:, 1);
+Yr = yv(:, 2);
+Thetar = yv(:, 3);
+hold on
+axis equal
+plot(Xr, Yr)
+
+
+%%Euler
+X=[];
+Y=[];
+
+s=[x0; y0; 0];
+h = T/n;
+t=0;
+while t<T 
+    t = t + h;
+    ds = fvel(t,s,b,aL,aR,wL,wR);
+    s = s + ds*h;
+
+    X = cat(1, X, s(1));
+    Y = cat(1, Y, s(2));
+end
+plot(X, Y)
+
+
+%%Euler igen
+X2=[];
+Y2=[];
+
+s=[x0; y0; 0];
+h = T/n2;
+t=0;
+while t<T 
+    t = t + h;
+    ds = fvel(t,s,b,aL,aR,wL,wR);
+    s = s + ds*h;
+
+    X2 = cat(1, X2, s(1));
+    Y2 = cat(1, Y2, s(2));
+end
+plot(X2, Y2)
+
+legend({sprintf("RK4 %.0f steg",nr),sprintf("Euler %.0f steg",n),sprintf("Euler %.0f steg",n2)})
+
+
+
 
 %% e)
 tend = 7*pi/8
@@ -129,6 +203,9 @@ N = 100
 deltat = tend/N
 
 % vad blir felen i x vid sluttiden för de två metoderna?
+
+
+
 
 %% f)
 % beräkna numeriska lösningar, fel vid sluttiden och noggrannhetsordningar med deltat, deltat/2, deltat/4.
