@@ -144,6 +144,8 @@ n = 100;%Antal Euler steg
 nr = n; %Antal RK steg
 n2=n*10;
 
+
+%RK4
 tspan = [0, T];
 options = odeset('RelTol',1e-8,'AbsTol',1e-8,'Refine',1);
 [tv,yv] = rk4(@(t,y) fvel(t, y, b, aL, aR, wL, wR), tspan, s, nr);
@@ -157,7 +159,7 @@ axis equal
 plot(Xr, Yr)
 
 
-%%Euler
+%Euler
 X=[];
 Y=[];
 
@@ -175,7 +177,7 @@ end
 plot(X, Y)
 
 
-%%Euler igen
+%Euler igen
 X2=[];
 Y2=[];
 
@@ -198,11 +200,59 @@ legend({sprintf("RK4 %.0f steg",nr),sprintf("Euler %.0f steg",n),sprintf("Euler 
 
 
 %% e)
-tend = 7*pi/8
-N = 100
-deltat = tend/N
+% Fel med Euler: -0.01, RK4: 0.0006
+x0=0;
+y0=1.5;
+theta0=0;
+s=[x0; y0; theta0]; b=1; aL=0; aR=0; wL=4; wR=2;
+B = (wR+wL)/2;
+D = (wR-wL)/b;
 
-% vad blir felen i x vid sluttiden för de två metoderna?
+T=7/8*pi;
+
+n = 100;%Antal Euler steg
+nr = n; %Antal RK steg
+
+
+%RK4
+tspan = [0, T];
+options = odeset('RelTol',1e-8,'AbsTol',1e-8,'Refine',1);
+[tv,yv] = rk4(@(t,y) fvel(t, y, b, aL, aR, wL, wR), tspan, s, nr);
+
+Xr = yv(:, 1);
+
+
+%Euler
+X=[];
+Y=[];
+
+s=[x0; y0; theta0];
+h = T/n;
+t=0;
+while t<T 
+    t = t + h;
+    ds = fvel(t,s,b,aL,aR,wL,wR);
+    s = s + ds*h;
+
+    X = cat(1, X, s(1));
+end
+
+
+%Beräknar analytisk lösning
+[x,y] = analytic_solutions(T,B,D,theta0,x0,y0);
+
+%Jämför
+EE = x - X(end);
+ERK4 = x - Xr(end);
+disp(sprintf("Absolut fel i t=%.0f med Euler n=100: %.0g",T, EE));
+disp(sprintf("Absolut fel i t=%.0f med RK4 n=100: %.0g",T, ERK4));
+
+
+function [x,y] = analytic_solutions(t,B,D,theta0,x0,y0)
+    theta = D*t + theta0;
+    x = x0 + (B/D)*(sin(theta)-sin(theta0));
+    y = y0 - (B/D)*(cos(theta)-cos(theta0)); 
+end
 
 
 
