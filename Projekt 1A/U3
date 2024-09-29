@@ -283,7 +283,6 @@ ne = n*(2^i);%Antal steg
 %RK4
 s = s0;
 tspan = [0, T];
-options = odeset('RelTol',1e-8,'AbsTol',1e-8,'Refine',1);
 [tv,yv] = rk4(@(t,y) fvel(t, y, b, aL, aR, wL, wR), tspan, s, ne);
 Xr = cat(1, Xr, yv(end, 1));
 
