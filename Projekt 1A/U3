@@ -134,18 +134,16 @@ axis equal
 % Noterar - RK4 är noggrannare med 100 steg än euler med 1000 steg, alltså är RK4 mycket bättre metod i (iaf i detta fall)
 x0=0;
 y0=1.5;
-s=[x0; y0; 0]; b=1; aL=0; aR=0; wL=4; wR=2;
-
-
-D=(wR-wL)/b;
-T=abs(2*pi/D);
+theta0=0;
+s=[x0; y0; theta0]; b=1; aL=0; aR=0; wL=4; wR=2;
+B = (wR+wL)/2;
+D = (wR-wL)/b;
+T = abs(2*pi/D);
 
 n = 100;%Antal Euler steg
 nr = n; %Antal RK steg
-n2=n*10;
+n2 = n*10;
 
-
-%RK4
 tspan = [0, T];
 options = odeset('RelTol',1e-8,'AbsTol',1e-8,'Refine',1);
 [tv,yv] = rk4(@(t,y) fvel(t, y, b, aL, aR, wL, wR), tspan, s, nr);
@@ -163,7 +161,7 @@ plot(Xr, Yr)
 X=[];
 Y=[];
 
-s=[x0; y0; 0];
+s=[x0; y0; theta0];
 h = T/n;
 t=0;
 while t<T 
@@ -181,7 +179,7 @@ plot(X, Y)
 X2=[];
 Y2=[];
 
-s=[x0; y0; 0];
+s=[x0; y0; theta0];
 h = T/n2;
 t=0;
 while t<T 
@@ -194,13 +192,28 @@ while t<T
 end
 plot(X2, Y2)
 
-legend({sprintf("RK4 %.0f steg",nr),sprintf("Euler %.0f steg",n),sprintf("Euler %.0f steg",n2)})
+
+%Analytisk lösning
+t=0;
+aX=[];
+aY=[];
+h=T/10000;
+while t<T
+    t = t + h;
+    [x,y] = analytic_solutions(t,B,D,theta0,x0,y0);
+    aX = cat(1, aX, x);
+    aY = cat(1, aY, y);
+end
+plot(aX, aY)
+
+
+legend({sprintf("RK4 %.0f steg",nr),sprintf("Euler %.0f steg",n),sprintf("Euler %.0f steg",n2), "Analytisk lösning"})
 
 
 
 
 %% e)
-% Fel med Euler: -0.01, RK4: 0.0006
+% Fel med Euler: -0.01, RK4: 3e-09
 x0=0;
 y0=1.5;
 theta0=0;
@@ -248,14 +261,79 @@ disp(sprintf("Absolut fel i t=%.0f med Euler n=100: %.0g",T, EE));
 disp(sprintf("Absolut fel i t=%.0f med RK4 n=100: %.0g",T, ERK4));
 
 
-function [x,y] = analytic_solutions(t,B,D,theta0,x0,y0)
-    theta = D*t + theta0;
-    x = x0 + (B/D)*(sin(theta)-sin(theta0));
-    y = y0 - (B/D)*(cos(theta)-cos(theta0)); 
-end
-
-
 
 
 %% f)
 % beräkna numeriska lösningar, fel vid sluttiden och noggrannhetsordningar med deltat, deltat/2, deltat/4.
+% - FELEN ÄR JÄTTEKONSTIGA
+x0=0;
+y0=1.5;
+theta0=0;
+s=[x0; y0; theta0]; b=1; aL=0; aR=0; wL=4; wR=2;
+B = (wR+wL)/2;
+D = (wR-wL)/b;
+
+T=7/8*pi;
+
+n = 100;
+Xr=[];
+X=[];
+nv=[];
+for i=0:2
+ne = n*(2^i);%Antal steg
+
+%RK4
+tspan = [0, T];
+options = odeset('RelTol',1e-8,'AbsTol',1e-8,'Refine',1);
+[tv,yv] = rk4(@(t,y) fvel(t, y, b, aL, aR, wL, wR), tspan, s, ne);
+Xr = cat(1, Xr, yv(end, 1));
+
+
+%Euler
+s=[x0; y0; theta0];
+h = T/ne;
+t=0;
+while t<T 
+    t = t + h;
+    ds = fvel(t,s,b,aL,aR,wL,wR);
+    s = s + ds*h;
+end
+X = cat(1, X, s(1));
+
+nv = cat(1, nv, ne);
+end
+
+
+%Beräknar analytisk lösning
+[x,y] = analytic_solutions(T,B,D,theta0,x0,y0);
+
+%Jämför
+EEv = abs(x - X);
+ERK4v = abs(x - Xr);
+
+%Beräknar noggrannhetsordning
+pE=[];
+for i=2:length(EEv)
+    p = log(EEv(i-1)/EEv(i)) / log(2);
+
+    pE = cat(1, pE, p);
+end
+pR=[];
+for i=2:length(ERK4v)
+    p = log(ERK4v(i-1)/ERK4v(i)) / log(2);
+
+    pR = cat(1, pR, p);
+end
+
+EEv
+ERK4v
+pE
+pR
+
+hold on
+plot(nv,EEv)
+plot(nv,ERK4v)
+title("Fel i Euler och RK4 med \Delta t, \Delta t/2 och \Delta t/4")
+xlabel("n") 
+ylabel("Fel") 
+legend({"Euler","RK4"})

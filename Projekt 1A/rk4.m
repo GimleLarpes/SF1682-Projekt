@@ -3,8 +3,8 @@ function [tv, yv]=rk4(f, tspan, y, n)
     t = tspan(1);
     h = (tspan(2) - tspan(1)) / n;
 
-    tv=[];
-    yv=[];
+    tv=[t];
+    yv=[y'];
     while t < tspan(2)
         s1 = f(t,y);
         s2 = f(t + 0.5*h, y + 0.5*s1*h);
