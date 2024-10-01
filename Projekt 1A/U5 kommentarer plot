@@ -12,3 +12,6 @@ R = b(wR+wL)/2(wR-wL)
 wR = vR(t) - aRt, wL = vL(t) - aLt --> R = [vR(t)-aRt+vL(t)-aLt]/[vR(t)-aRt-vL(t)-aLt] ... ???
 
 c) aR < aL, wR > wL : aR = 1 m/s2, aL = 3 m/s2, wR = 6 m/s, wL = 1 m/s
+vR(t) = t+6, vL(t)= 3t+1. Fram till t=2,5 är vR större än vL --> under den tiden svänger roboten åt vänster. Därefter blir vL
+alltid större och roboten svänger åt höger. aL är alltid större än aR, vilket innebär att svängradien blir större då roboten
+svänger åt vänster och mindre då roboten svänger åt höger. Radien slutar igen minska vid 1.8. 
