@@ -1,15 +1,83 @@
-%U6: Den momentana radien ges av
+%%U6: Den momentana radien ges av
 %R(t) = b(vR(t) + vL(t))2(vR(t) − vL(t)) .
 %Vi vill nu best amma aR s ̊a att vid en tidpunkt t = T g ̈aller R(T ) =  ̄R d ̈ar  ̄R = 1 m och
 % ̈ovriga parametrar ges av 
 % aL = 0.4 m/s2, wR = 3 m/s, wL = 1 m/s, b = 1 m. (R=1)
 
-%a) L ̊at T = 1 och best ̈am aR med Newton-Raphsons metod. G ̈or en plot med Newton-
+%%a) L ̊at T = 1 och best ̈am aR med Newton-Raphsons metod. G ̈or en plot med Newton-
 %Raphson-funktionen p ̊a y-axeln och aR p ̊a x-axeln och utg ̊a fr ̊an plotten f ̈or att best ̈amma
 %startgissning. Vilken startgissning anv ̈ande ni och vilket resultat fick ni? Verifiera
 %kvadratisk konvergens f ̈or Newton-Raphsons metod.
 
-%b)  ̈Andra till T = 2 och l ̈os  ̊aterigen f ̈or aR. Vad noterar du? K ̈or koden du anv ̈ande i U5
+% - Startgissning aR=1, resultat aR=1.2, konvergens p=2 (valda noggrannheten är matlab epsilon, vilket för att senare värden på p är konstiga)
+% - t=2: Mera instabil, annars inget märkbart. Roboten rör sig i en cirkel
+aL=0.4; wR=3; wL=1; b=1;
+%TID
+t=1;
+%R ska vara 1
+Rt=1;
+
+%Startgissning
+aR=1;
+R=0.5*b * (aR*t + wR + aL*t + wL) / (aR*t +wR - aL*t - wL);
+
+%Tolerans
+T=eps;
+
+
+% Vid t=1, ska R=1, löser startvärde för aR
+Rl=[];
+aRl=[];
+NEvec=[];
+while abs(Rt-R)>T
+    [aR,R] = drfunk(aR, aL, wR, wL, b, t);
+    Rl = cat(1, Rl, R);
+    aRl = cat(1, aRl, aR);
+
+    %NEvec = cat(1, NEvec, abs(Rt-R));
+    NEvec = cat(1, NEvec, abs(1.2-aR));
+end
+disp("Värde på aR: "+aR)
+plot(aRl)
+
+
+%Konvergens
+pE=[];
+for i=3:length(NEvec)
+    p = log(NEvec(i-1)/NEvec(i)) / log(NEvec(i-2)/NEvec(i-1));
+
+    pE = cat(1, pE, p);
+end
+disp("Konvergens:")
+pE
+
+
+plot(aRl(1:end-1), aRl(2:end))
+
+
+%Cheating
+%Rll=[];
+%aR=0;
+%while aR<10
+%    %R = 0.5*b * (aR*t + wR + aL*t + wL) / (aR*t +wR - aL*t - wL);
+%    R=b * (wR*aL - aR*wL) / (t*(aR-aL) + wR - wL)^2
+%    Rll = cat(1, Rll, R);
+%    aR=aR+0.01;
+%end
+%plot(Rll)
+
+
+%Funktion som ska göra stuff
+function [aR,R] = drfunk(aR, aL, wR, wL, b, t)
+    R = 0.5*b * (wL + aL*t + wR + aR*t) / (wR + aR*t - wL - aL*t);
+    dR = 0.5*b * t*(wR + aR*t - wL - aL*t - (wL + aL*t + wR + aR*t)) / (wR + aR*t - wL - aL*t)^2;
+
+    aR = aR - (R - 1) / dR;
+end
+
+
+
+%%b)  ̈Andra till T = 2 och l ̈os  ̊aterigen f ̈or aR. Vad noterar du? K ̈or koden du anv ̈ande i U5
 %med dessa parametrar. Hur r ̈or sig roboten?
 
 %s = fvel(t, s, b, aL, aR, wL, wR);
