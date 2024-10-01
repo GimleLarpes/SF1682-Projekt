@@ -263,7 +263,8 @@ disp(sprintf("Absolut fel i t=%.0f med RK4 n=100: %.0g",T, ERK4));
 
 %% f)
 % beräkna numeriska lösningar, fel vid sluttiden och noggrannhetsordningar med deltat, deltat/2, deltat/4.
-% - FELEN ÄR JÄTTEKONSTIGA
+% - Euler NO1, RK4 NO4
+clear all
 x0=0;
 y0=1.5;
 theta0=0;
@@ -271,9 +272,9 @@ s0=[x0; y0; theta0]; b=1; aL=0; aR=0; wL=4; wR=2;
 B = (wR+wL)/2;
 D = (wR-wL)/b;
 
-T=7/8*pi;
-
+T = 7/8*pi;
 n = 100;
+
 Xr=[];
 X=[];
 nv=[];
@@ -292,6 +293,11 @@ s = s0;
 h = T/ne;
 t = 0;
 while t<T 
+    %Adjust step length to not overshoot
+    if T - t < h
+        h = T - t + eps;
+    end
+
     ds = fvel(t,s,b,aL,aR,wL,wR);
     s = s + ds*h;
     t = t + h;
@@ -328,10 +334,35 @@ ERK4v
 pE
 pR
 
+tiledlayout(1,2);
+%Tile 1
+nexttile
 hold on
 plot(nv,EEv)
 plot(nv,ERK4v)
 title("Fel i Euler och RK4 med \Delta t, \Delta t/2 och \Delta t/4")
 xlabel("n") 
 ylabel("Fel") 
+legend({"Euler","RK4"})
+
+%Tile 2
+nexttile
+hold on
+loglog(log(nv),log(EEv))
+loglog(log(nv),log(ERK4v))
+title("Log-Log plot")
+xlabel("log(n)") 
+ylabel("log(Fel)") 
+
+
+
+
+f1 = figure;
+hold on
+plot(nv(1:end-1),pE)
+plot(nv(1:end-1),pR)
+title("Beräknad noggrannhetsordning för Euler och RK4")
+ylim([0.5,5])
+xlabel("n") 
+ylabel("p") 
 legend({"Euler","RK4"})
