@@ -7,6 +7,8 @@ alltid vara större än vR --> roboten svänger alltid åt höger. P.g.a. accele
 
 b) aR > aL, wR > wL : aR = 4 m/s2, aL = 2 m/s2, wR = 3 m/s, wL = 2 m/s
 vR(t) = 4t+3, vL(t)=2t+2. vR kommer alltid vara större, därav alltid vänstersväng. Ju längre roboten åker, desto mindre blir
-svängradien. SVängradien blir dock inte oändligt liten, den slutar vid ungefär 1,8 m. 
+svängradien. Svängradien slutar dock minska vid ungefär R = 1,8 m och förblir konstant (minskar väldigt långsamt). 
+R = b(wR+wL)/2(wR-wL) 
+wR = vR(t) - aRt, wL = vL(t) - aLt --> R = [vR(t)-aRt+vL(t)-aLt]/[vR(t)-aRt-vL(t)-aLt] ... ???
 
 c) aR < aL, wR > wL : aR = 1 m/s2, aL = 3 m/s2, wR = 6 m/s, wL = 1 m/s
