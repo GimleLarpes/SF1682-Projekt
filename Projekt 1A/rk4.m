@@ -6,7 +6,7 @@ function [tv, yv]=rk4(f, tspan, y, n)
     tv=t;
     yv=y';
     while t < tspan(2)
-        %Adjust step length to not overshoot
+        %Adjust step length to prevent overshooting
         if tspan(2) - t < h
             h = tspan(2) - t + eps;
         end
