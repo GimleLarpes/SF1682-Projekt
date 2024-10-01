@@ -1,6 +1,7 @@
 %aL=3; aR=3; wL=5; wR=1; % fall a)
 %aL=2; aR=4; wL=2; wR=3; % fall b)
 %aL=3; aR=1; wL=1; wR=6; % fall c)
+%aL=0.4; aR=1.2; wL=1; wR=3; % fall U6
 b = 1;
 B = (wR+wL)/2;
 D = (wR-wL)/b;
@@ -10,6 +11,7 @@ y0=-(B/D)*cos(theta0);
 s=[x0 y0 theta0];
 initial_values = [x0;y0;theta0];
 tspan = [0 10];
+%tspan = [0 1]; %U6
 
 options = odeset('RelTol',1e-6,'Refine',4);
 
