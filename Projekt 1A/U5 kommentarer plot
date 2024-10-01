@@ -1,5 +1,12 @@
+vR(t) = aRt + wR
+vL(t) = aLt + wL
+
 a) aR = aL, wR < wL : aR = aL = 3 m/s2, wR = 1 m/s, wL = 5 m/s
+Hjulen har samma acceleration, det vänstra har högre initial hastighet än det högra. vR(t)=3t+1, vL(t)=3t+5 --> vL kommer
+alltid vara större än vR --> roboten svänger alltid åt höger. P.g.a. acceleration kommer svängradien bli större och större. 
 
 b) aR > aL, wR > wL : aR = 4 m/s2, aL = 2 m/s2, wR = 3 m/s, wL = 2 m/s
+vR(t) = 4t+3, vL(t)=2t+2. vR kommer alltid vara större, därav alltid vänstersväng. Ju längre roboten åker, desto mindre blir
+svängradien. SVängradien blir dock inte oändligt liten, den slutar vid ungefär 1,8 m. 
 
 c) aR < aL, wR > wL : aR = 1 m/s2, aL = 3 m/s2, wR = 6 m/s, wL = 1 m/s
