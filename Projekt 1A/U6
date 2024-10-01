@@ -1,6 +1,6 @@
 %U6: Den momentana radien ges av
 %R(t) = b(vR(t) + vL(t))2(vR(t) − vL(t)) .
-%Vi vill nu best ̈amma aR s ̊a att vid en tidpunkt t = T g ̈aller R(T ) =  ̄R d ̈ar  ̄R = 1 m och
+%Vi vill nu best amma aR s ̊a att vid en tidpunkt t = T g ̈aller R(T ) =  ̄R d ̈ar  ̄R = 1 m och
 % ̈ovriga parametrar ges av 
 % aL = 0.4 m/s2, wR = 3 m/s, wL = 1 m/s, b = 1 m. (R=1)
 
