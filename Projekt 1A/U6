@@ -158,10 +158,11 @@ while differens>=10^(-1)
     differens=abs(aR1-aR);
     AR=[AR, aR];
     R1=[R1,R];
-    
-    
 end
 plot(R1,AR)
+
+
+
 
 %% Kör koden i U5 med dessa parametrar 
 
