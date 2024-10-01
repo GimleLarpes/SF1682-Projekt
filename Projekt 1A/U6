@@ -17,26 +17,29 @@ aL=0.4;
 wR=3;
 wL=1;
 b=1;
-aR=0;
-t=pi;
-differens=1;
+t=1;
+aR=1.1;
 % x = x0 - f(x0)/f'(x0)
-
+h=10^(-8);
 R = (b*((aR*t+wR) + (aL*t+wL)))/(2*((aR*t+wR) - (aL*t+wL)));
-Rprim = ((((b*(aR+aL))*(2*((aR*t+wR)-(aL*t+wL))))-(b*((aR*t+wR)+(aL*t+wL)))*(2*(aR-aL))))/((2*((aR*t+wR)-(aL*t+wL)))^2);
-
-%i=0;
-aR=0;
-
-while differens>=10^(-4)
+Rprim = (((b*(((aR+h)*t+wR) + (aL*t+wL)))/(2*(((aR+h)*t+wR)) - ((aL*t+wL)))-(b*((aR*t+wR) + (aL*t+wL)))/(2*((aR*t+wR) - (aL*t+wL)))))/h;
+differens=R-1;
+i=0;
+AR=[];
+R1=[];
+%while abs(differens)>=10^(-8)
+for a=1:1000
     R = (b*(aR*t+wR + aL*t+wL))/(2*(aR*t+wR) - (aL*t+wL));
-    Rprim = ((b*(aR+aL))*(2*(aR*t+wR-aL*t-wL))-b*(aR*t+wR+aL*t+wL)*2*(aR-aL))/(2*(aR*t+wR-(aL*t+wL))^2);
+    Rprim = ((b*((aR*(t+h)+wR) + (aL*(t+h)+wL)))/(2*((aR*(t+h)+wR)) - ((aL*t+wL)))-(b*((aR*t+wR) + (aL*t+wL)))/(2*((aR*t+wR) - (aL*t+wL))))/h;
     aR1 = aR;
     aR = aR1 - R/Rprim;
-   %i = i+1;
+    i = i+1;
     differens=abs(aR1-aR);
+    AR=[AR, aR];
+    R1=[R1, R];
 end
-plot(R, aR)
+plot(R1, AR)
+
 % startgissning?
 
 %%
@@ -47,15 +50,17 @@ wR=3;
 wL=1;
 b=1;
 aR=0;
-t=pi;
-differens=1;
-while differens>=10^(-4)
+t=1;
+h=10^(-8);
+i=0;
+differens=R-1;
+while differens>=10^(-10)
     R = (b*(aR*t+wR + aL*t+wL))/(2*(aR*t+wR) - (aL*t+wL));
-    Rprim = ((b*(aR+aL))*(2*(aR*t+wR-aL*t-wL))-b*(aR*t+wR+aL*t+wL)*2*(aR-aL))/(2*(aR*t+wR-(aL*t+wL))^2);
+    Rprim = ((b*((aR*(t+h)+wR) + (aL*(t+h)+wL)))/(2*((aR*(t+h)+wR)) - ((aL*t+wL)))-(b*((aR*t+wR) + (aL*t+wL)))/(2*((aR*t+wR) - (aL*t+wL))))/h;
     aR2 = aR1;
     aR1 = aR;
     aR = aR1 - R/Rprim;
-   %i = i+1;
+    i = i+1;
     differens=abs(aR1-aR);
     K = [K, abs(aR-aR1)/abs((aR1-aR2)^2)];
 end
@@ -63,29 +68,49 @@ plot(K)
 
 %% T=2
 
-s = fvel(t, s, b, aL, aR, wL, wR);
+%s = fvel(t, s, b, aL, aR, wL, wR);
 aL=0.4;
 wR=3;
 wL=1;
 b=1;
-aR=1;
-t=2*pi;
-
-R = (b*(aR*t+wR + aL*t+wL))/(2*(aR*t+wR) - (aL*t+wL));
-Rprim = ((b*(aR+aL))*(2*(aR*t+wR-aL*t-wL))-b*(aR*t+wR+aL*t+wL)*2*(aR-aL))/(2*(aR*t+wR-(aL*t+wL))^2);
-
-%i=0;
 aR=0;
+t=2;
+h=10^(-8);
+i=0;
+differens=R-1;
+AR=[];
+R1=[];
 
-while t<T
+while differens>=10^(-1)
     R = (b*(aR*t+wR + aL*t+wL))/(2*(aR*t+wR) - (aL*t+wL));
-    Rprim = ((b*(aR+aL))*(2*(aR*t+wR-aL*t-wL))-b*(aR*t+wR+aL*t+wL)*2*(aR-aL))/(2*(aR*t+wR-(aL*t+wL))^2);
+    Rprim = ((b*((aR*(t+h)+wR) + (aL*(t+h)+wL)))/(2*((aR*(t+h)+wR)) - ((aL*t+wL)))-(b*((aR*t+wR) + (aL*t+wL)))/(2*((aR*t+wR) - (aL*t+wL))))/h;
     aR1 = aR;
     aR = aR1 - R/Rprim;
-   %i = i+1;
-    t=abs(aR1-aR);
+    i = i+1;
+    differens=abs(aR1-aR);
+    AR=[AR, aR];
+    R1=[R1,R];
+    
     
 end
-plot(R, aR)
+plot(R1,AR)
 
 %% Kör koden i U5 med dessa parametrar 
+
+aL=0.4; wR=3; wL=1; b=1; aR=0; 
+b = 1;
+B = (wR+wL)/2;
+D = (wR-wL)/b;
+theta0=0;
+x0=(B/D)*sin(theta0);
+y0=-(B/D)*cos(theta0);
+s=[x0 y0 theta0];
+initial_values = [x0;y0;theta0];
+tspan = [0 pi];
+
+options = odeset('RelTol',1e-6,'Refine',4);
+
+[t,y45] = ode45(@(t,y) fvel(t, y, b, aL, aR, wL, wR),tspan,initial_values,options)
+
+plot(y45(:,1), y45(:,2));
+axis equal
