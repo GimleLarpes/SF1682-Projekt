@@ -66,17 +66,6 @@ plot(aRl(1:end-1), aRl(2:end))
 %end
 %plot(Rll)
 
-
-%Funktion som ska göra stuff
-function [aR,R] = drfunk(aR, aL, wR, wL, b, t)
-    R = 0.5*b * (wL + aL*t + wR + aR*t) / (wR + aR*t - wL - aL*t);
-    dR = 0.5*b * t*(wR + aR*t - wL - aL*t - (wL + aL*t + wR + aR*t)) / (wR + aR*t - wL - aL*t)^2;
-
-    aR = aR - (R - 1) / dR;
-end
-
-
-
 %%b)  ̈Andra till T = 2 och l ̈os  ̊aterigen f ̈or aR. Vad noterar du? K ̈or koden du anv ̈ande i U5
 %med dessa parametrar. Hur r ̈or sig roboten?
 
@@ -183,3 +172,11 @@ options = odeset('RelTol',1e-6,'Refine',4);
 
 plot(y45(:,1), y45(:,2));
 axis equal
+
+%Funktion som ska göra stuff
+function [aR,R] = drfunk(aR, aL, wR, wL, b, t)
+    R = 0.5*b * (wL + aL*t + wR + aR*t) / (wR + aR*t - wL - aL*t);
+    dR = 0.5*b * t*(wR + aR*t - wL - aL*t - (wL + aL*t + wR + aR*t)) / (wR + aR*t - wL - aL*t)^2;
+
+    aR = aR - (R - 1) / dR;
+end
