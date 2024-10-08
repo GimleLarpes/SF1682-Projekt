@@ -9,6 +9,22 @@
 %startgissning. Vilken startgissning anv ̈ande ni och vilket resultat fick ni? Verifiera
 %kvadratisk konvergens f ̈or Newton-Raphsons metod.
 
+% plot för att välja startvärde, max vid 1.2 så borde välja startvärde i
+% närheten av 1.2 
+tt=0;
+TT=2;
+hh=abs((TT-tt)/1000);
+XX=[];
+YY=[];
+while tt<TT
+    XX=cat(1,XX,tt);
+    [aRR,R] = drfunk(tt, aL, wR, wL, b, t);
+    
+    YY=cat(1, YY, aRR);
+    tt=tt+hh;
+end
+plot(XX, YY)
+
 % - Startgissning aR=1, resultat aR=1.2, konvergens p=2 (valda noggrannheten är matlab epsilon, vilket för att senare värden på p är konstiga)
 % - t=2: Mera instabil, annars inget märkbart. Roboten rör sig i en cirkel
 aL=0.4; wR=3; wL=1; b=1;
