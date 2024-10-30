@@ -1,1 +1,18 @@
+% skriv en funktion quartercar.m med systemet från U1
+% skriv en kod som löser z1,z2,zprick1,zprick2 numeriskt med:
 
+
+% initialvillkor z1 = z2 = zprick1 = zprick2 = 0, k1, k2 deras tabellvärden
+
+%% i) Euler framåt
+
+%% ii) ode45
+
+%% a) plotta lösningen för z1, z2 med ode45 med reltol = 10^-6 vad är z1max, z2max och vad innebär det för passagerarna?
+
+%% b) bifoga en plot som innehåller tidsstegen för ode45. hur stora är tidsstegen och hur förändras de med tiden?
+% förklara förändringarna i tidsstegen över tid genom att studera plottarna
+% för den numeriska lösningen och tidsstegen. (anpassa refine)
+
+%% c) jämför euler med ode45 för deltat = 5*10^-3 och deltat = 5*10^-4 
+%(plotta lösningarna för z2 i samma figur) och kommentera.
