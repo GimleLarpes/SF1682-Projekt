@@ -1,1 +1,15 @@
+%% a) härled stabilitetsvillkoret för framåt euler
+% med antagandet att systemmatrisen i U1 är diagonaliserbar m. egenvärden
+% lambda 1-4 och uttyck stabilitetsvillkoret på formen:
+% deltat <= deltatmax = min 1<=k<=4 F(lambdak)
 
+%% b) beräkna stabilitetsvillkoret för euler framåt för systemet när parametrar från tabell 1 används.
+% vad är deltatmax för vilket stabilitetsvillkoret uppfylls?
+% uppfyller deltat = 5*10^-3 som användes i U2(c) villkoret?
+
+%% c) kör koden ni använde i U2(i) (framåt euler) med deltat= alpha*deltatmax för alpha = 0.9, 1, 1.1, 1.5
+% vad händer? bifoga plottar
+
+%% d) välj k2=100*k2,ref och räkna ut nya deltatmax. kör koden med deltat = deltatmax
+% bifoga plot över z1 och z2 som funktion av tiden med deltat tydligt
+% angivet.
