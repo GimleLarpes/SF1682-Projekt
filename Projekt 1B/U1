@@ -1,1 +1,29 @@
+m1=465;
+m2=55;
+k1=5350;
+k2=136100;
+c1=310;
+c2=1250;
+v=63/3.6;
+H=0.27;
+L=1.1;
 
+ht = 0;
+if t <= L/v
+  ht = H/2*(1-cos(2*pi*v*t/L));
+else
+  ht=0;
+end
+q = [z1 z2];
+qprick = [zprick1 zprick2];
+q2prick = [z2prick1 z2prick2];
+M = [m1 0; 0 m2];
+C = [c1 -c1; -c1 c1+c2];
+K = [k1 -k1; -k1 k1+k2];
+F = [0; k2*h + c2*hprick];
+
+F = M*q2prick + C*qprick + K*q;
+
+v_vec = [z1 z2 zprick1 zprick2];
+
+dvdt = H*v_vec + gt;
