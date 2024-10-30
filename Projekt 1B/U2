@@ -14,7 +14,8 @@ n = 100;
 h=T/n;
 
 while t<T
-    zvec = quartercar(m1, m2, k1, k2, c1, c2, v, H, L);
+    %Måste beräkna h,dh
+    zvec = quartercar(v, h, dh, k1, k2, c1, c2, m1, m2);
     zEuler = zEuler + zvec*h;
     t = t + h;
 end
