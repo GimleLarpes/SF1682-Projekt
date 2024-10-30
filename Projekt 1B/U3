@@ -1,1 +1,16 @@
+% Tk(k1, k2) 70% av "tidigare värdet" = tabellvärdet?
+% Ts(k1,k2) oförändrat
+
+%skriv ett program som numeriskt beräknar k1 och k2 med newtons metod för
+%system
+
+
+
+%% a) vad blir de nya optimerade värdena på k1 och k2? använd k1,ref och k2,ref som initialgissning med toleransen 10^-6
+
+%% b) verifiera förväntad konvergensordning. Testa olika startgissningar. konvergerar metoden mot en annan lösning för någon startgissning?
+
+%% c) kör koden ni skrev i U2 med de nya värdena på k1, k2 och plotta z1 som en funktion av tiden. 
+% plotta även z1 som en funktion av tiden för k1,ref och k2,ref. hur
+% stämmer resultatet överens med uppgiften att öka komforten?
 
