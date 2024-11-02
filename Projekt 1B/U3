@@ -1,16 +1,47 @@
-% Tk(k1, k2) 70% av "tidigare värdet" = tabellvärdet?
-% Ts(k1,k2) oförändrat
-
 %skriv ett program som numeriskt beräknar k1 och k2 med newtons metod för
 %system
+% a) vad blir de nya optimerade värdena på k1 och k2? använd k1,ref och k2,ref som initialgissning med toleransen 10^-6
+% b) verifiera förväntad konvergensordning. Testa olika startgissningar. konvergerar metoden mot en annan lösning för någon startgissning?
+k1 = 5350;
+k2 = 136100;
+ck=1.7;
+cs=1;
+tolerans = 10^(-6);
 
+%initialgissning
+x0 = [k1; k2];
 
+err=1;
+E = [];
 
-%% a) vad blir de nya optimerade värdena på k1 och k2? använd k1,ref och k2,ref som initialgissning med toleransen 10^-6
+while err>tolerans
 
-%% b) verifiera förväntad konvergensordning. Testa olika startgissningar. konvergerar metoden mot en annan lösning för någon startgissning?
+F = transfer_functions(x0(1), x0(2), ck, cs);
+J = Jacobian_transfer_functions(x0(1), x0(2));
+
+dx = -J\F; % hur får man JI och F att ändras för varje iteration?
+x1 = x0+dx;
+err=norm(x1-x0);
+x0 = x1;
+E  = [E, err];
+
+end
+
+disp("Nya värdet på k1: " + x0(1))
+disp("Nya värdet på k2: " + x0(2))
+
+K=[];
+for i=3:length(E)
+    p = log(E(i-1)/E(i)) / log(E(i-2)/E(i-1));
+    K=[K,p];
+end
+
+for i=1:4
+disp("Konvergens för " + i + ":a iterationen: " + K(i))
+end
+
+% kvadratisk konvergensordning, samma för NR med system?
 
 %% c) kör koden ni skrev i U2 med de nya värdena på k1, k2 och plotta z1 som en funktion av tiden. 
 % plotta även z1 som en funktion av tiden för k1,ref och k2,ref. hur
 % stämmer resultatet överens med uppgiften att öka komforten?
-
