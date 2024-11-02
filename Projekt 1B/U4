@@ -1,15 +1,77 @@
-%% a) härled stabilitetsvillkoret för framåt euler
-% med antagandet att systemmatrisen i U1 är diagonaliserbar m. egenvärden
-% lambda 1-4 och uttyck stabilitetsvillkoret på formen:
-% deltat <= deltatmax = min 1<=k<=4 F(lambdak)
+%% b) 
+z1=0; z2=0; zprick1=0; zprick2=0;
+m1=465; m2=55; k1=5350; k2=136100; c1=310; c2=1250; v=63/3.6; H=0.27; L=1.1;
+v_vec = [z1; z2; zprick1; zprick2];
+t = 0;
+T = 10;
 
-%% b) beräkna stabilitetsvillkoret för euler framåt för systemet när parametrar från tabell 1 används.
-% vad är deltatmax för vilket stabilitetsvillkoret uppfylls?
-% uppfyller deltat = 5*10^-3 som användes i U2(c) villkoret?
+H_matrix = [0, 0, 1, 0;
+            0, 0, 0, 1;
+            -k1 / m1, k1 / m1, -c1 / m1, c1 / m1;
+            k1 / m1, -((k1 + k2) / m2), c1 / m2, -((c1 + c2) / m2)];
+eigenvalues = eig(H_matrix)
+max_eigenvalue = max(abs(eigenvalues))
+delta_t_max = 2 / max_eigenvalue
 
-%% c) kör koden ni använde i U2(i) (framåt euler) med deltat= alpha*deltatmax för alpha = 0.9, 1, 1.1, 1.5
-% vad händer? bifoga plottar
+%c)
+alpha = 0.9;
+delta_t = delta_t_max*alpha;
+i = 0;
+z1_vec=[];
+z2_vec=[];
 
-%% d) välj k2=100*k2,ref och räkna ut nya deltatmax. kör koden med deltat = deltatmax
-% bifoga plot över z1 och z2 som funktion av tiden med deltat tydligt
-% angivet.
+while t<T
+    i = i+1;
+
+    dv = quartercar(t, v_vec, k1, k2, c1, c2, m1, m2, H, L, v);
+    v_vec = v_vec + dv*delta_t;
+    t = t + delta_t;
+
+    z1_vec(i) = v_vec(1);
+    z2_vec(i) = v_vec(2);
+end
+
+v_vec
+
+plot(z1_vec)
+hold on
+plot(z2_vec)
+legend({"z1", "z2"})
+
+%% d)
+z1=0; z2=0; zprick1=0; zprick2=0;
+m1=465; m2=55; k1=5350; k2=13610000; c1=310; c2=1250; v=63/3.6; H=0.27; L=1.1;
+v_vec = [z1; z2; zprick1; zprick2];
+t = 0;
+T = 10;
+
+H_matrix = [0, 0, 1, 0;
+            0, 0, 0, 1;
+            -k1 / m1, k1 / m1, -c1 / m1, c1 / m1;
+            k1 / m1, -((k1 + k2) / m2), c1 / m2, -((c1 + c2) / m2)];
+eigenvalues = eig(H_matrix)
+max_eigenvalue = max(abs(eigenvalues))
+delta_t_max = 2 / max_eigenvalue
+
+i = 0;
+z1_vec=[];
+z2_vec=[];
+
+while t<T
+    i = i+1;
+
+    dv = quartercar(t, v_vec, k1, k2, c1, c2, m1, m2, H, L, v);
+    v_vec = v_vec + dv*delta_t_max;
+    t = t + delta_t_max;
+
+    z1_vec(i) = v_vec(1);
+    z2_vec(i) = v_vec(2);
+end
+
+v_vec
+
+plot(z1_vec)
+hold on
+plot(z2_vec)
+legend({"z1", "z2"})
+
