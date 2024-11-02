@@ -19,7 +19,7 @@ while err>tolerans
 F = transfer_functions(x0(1), x0(2), ck, cs);
 J = Jacobian_transfer_functions(x0(1), x0(2));
 
-dx = -J\F; % hur får man JI och F att ändras för varje iteration?
+dx = -J\F; 
 x1 = x0+dx;
 err=norm(x1-x0);
 x0 = x1;
