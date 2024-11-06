@@ -1,3 +1,6 @@
+% Tk(k1, k2) 70% av tidigare värdet
+% Ts(k1,k2) oförändrat
+
 %skriv ett program som numeriskt beräknar k1 och k2 med newtons metod för
 %system
 % a) vad blir de nya optimerade värdena på k1 och k2? använd k1,ref och k2,ref som initialgissning med toleransen 10^-6
@@ -19,7 +22,9 @@ while err>tolerans
 F = transfer_functions(x0(1), x0(2), ck, cs);
 J = Jacobian_transfer_functions(x0(1), x0(2));
 
-dx = -J\F; 
+dx = -J\F;
+% rot = x0 - J^(-1)*F
+
 x1 = x0+dx;
 err=norm(x1-x0);
 x0 = x1;
@@ -40,8 +45,30 @@ for i=1:4
 disp("Konvergens för " + i + ":a iterationen: " + K(i))
 end
 
-% kvadratisk konvergensordning, samma för NR med system?
 
 %% c) kör koden ni skrev i U2 med de nya värdena på k1, k2 och plotta z1 som en funktion av tiden. 
 % plotta även z1 som en funktion av tiden för k1,ref och k2,ref. hur
 % stämmer resultatet överens med uppgiften att öka komforten?
+
+z1=0; z2=0; zprick1=0; zprick2=0; z=0;
+m1=465; m2=55; k1=11822.4241; k2=74834.1359; c1=310; c2=1250; v=63/3.6; H=0.27; L=1.1;
+v_vec = [z1; z2; zprick1; zprick2];
+tspan = [0 0.5];
+
+options = odeset('RelTol',1e-6,'AbsTol',1e-6,'Refine',1);
+
+[t, zode45ny] = ode45(@(t, z) quartercar(t, z, k1, k2, c1, c2, m1, m2, H, L, v), tspan, v_vec, options);
+
+z1=0; z2=0; zprick1=0; zprick2=0; z=0;
+m1=465; m2=55; k1=5350; k2=136100; c1=310; c2=1250; v=63/3.6; H=0.27; L=1.1;
+v_vec = [z1; z2; zprick1; zprick2];
+tspan = [0 0.5];
+
+options = odeset('RelTol',1e-6,'AbsTol',1e-6,'Refine',1);
+
+[t, zode45] = ode45(@(t, z) quartercar(t, z, k1, k2, c1, c2, m1, m2, H, L, v), tspan, v_vec, options);
+
+plot(zode45ny(:,1))
+hold on
+plot(zode45(:,1))
+legend("z1 för nya k1,k2", "z1 för referensvärdena på k1,k2")
