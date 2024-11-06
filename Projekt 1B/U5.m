@@ -37,7 +37,7 @@ end
 
 %Plot
 hold on
-a=4;
+a=2;
 %plot(n0ZT,n0Z(a,:))
 %plot(n1ZT,n1Z(a,:))
 plot(n2ZT,n2Z(a,:))
