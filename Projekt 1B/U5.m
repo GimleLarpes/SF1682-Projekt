@@ -22,7 +22,7 @@ function [vl,tl]=qc_inv_trap(tspan, h, v_vec, k1, k2, c1, c2, m1, m2, H, L, v)
 
         %v_vec = v_vec + 0.5*dt * (H_matrix*v_vec + H_matrix*(v_vec + dv) + g + calc_g(t+dt, k2, c2, m2, H, L, v));
         theta=0.5;
-        v_vec = (eye-dt*theta * H_matrix)*(v_vec + dt*((1-theta) * (H_matrix * v_vec+g)) + dt * theta * calc_g(t+dt, k2, c2, m2, H, L, v));
+        v_vec = (eye-dt*theta * H_matrix)\(v_vec + dt*((1-theta) * (H_matrix * v_vec+g)) + dt * theta * calc_g(t+dt, k2, c2, m2, H, L, v));
 
         vl = cat(2, vl, v_vec);
         tl = cat(2, tl, t);
