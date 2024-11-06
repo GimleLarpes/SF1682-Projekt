@@ -44,7 +44,7 @@ plot(n0ZT,n0Z(2,:))
 
 %Beräknar exakt lösning
 tspan=[0,0.05];
-dt0 = 0.01;
+dt0 = 0.004;
 options = odeset('RelTol',1e-9,'Refine',1);
 
 [Rt,Rv] = ode45(@(t,y) quartercar(t, v_vec, k1, k2, c1, c2, m1, m2, H, L, v),tspan,v_vec0,options);
@@ -56,10 +56,24 @@ options = odeset('RelTol',1e-9,'Refine',1);
 [e3Z,e3ZT] = qc_inv_trap(tspan, dt0/8, v_vec0, k1, k2, c1, c2, m1, m2, H, L, v);
 
 %Beräknar fel
-e0 = max(abs(e0Z(2,end)-Rv(2,end)))
-e1 = max(abs(e1Z(2,end)-Rv(2,end)))
-e2 = max(abs(e2Z(2,end)-Rv(2,end)))
-e3 = max(abs(e3Z(2,end)-Rv(2,end)))
+e0 = max(abs(e0Z(2,end)-Rv(2,end)));
+e1 = max(abs(e1Z(2,end)-Rv(2,end)));
+e2 = max(abs(e2Z(2,end)-Rv(2,end)));
+e3 = max(abs(e3Z(2,end)-Rv(2,end)));
+%Konvergensordning
+K=[];
+E=[e0,e1,e2,e3];
+for i=3:length(E)
+    p = log(E(i-1)/E(i)) / log(E(i-2)/E(i-1));
+    K=[K,p];
+end
+
+for i=1:length(K)
+disp("Konvergens för " + i + ":a iterationen: " + K(i))
+end
+
+%Konvergens ~2, kvadratisk konvergens
+
 
 % referenslösning med ode45, reltol abstol = 10^-9. ändra tspan för att få
 % lösningen i sökta tidspunkter
