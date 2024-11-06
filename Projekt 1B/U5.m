@@ -10,7 +10,7 @@ m1 = 465; m2 = 55; k1 = 5350; k2 = 13610000; c1 = 310; c2 = 1250; v = 63/3.6; H 
 v_vec0 = [z1; z2; zprick1; zprick2];
 T = 0.05;
 
-h_max = 0.001;%0.0395; %deltatmax beräknat i U4
+h_max = 0.0001;%0.0395; %deltatmax beräknat i U4
 tspan = [0, T];
 
 nZ=[];
@@ -37,7 +37,14 @@ end
 
 %Plot
 hold on
-plot(n0ZT,n0Z(2,:))
+a=4;
+%plot(n0ZT,n0Z(a,:))
+%plot(n1ZT,n1Z(a,:))
+plot(n2ZT,n2Z(a,:))
+[Rt,Rv] = ode45(@(t,y) quartercar(t, v_vec, k1, k2, c1, c2, m1, m2, H, L, v),tspan,v_vec0,options);
+plot(Rt, Rv(:,a))
+legend({"1*h_{max}", "10*h_{max}", "100*h_{max}", "ode45"})
+
 
 %% b) konvergensstudie fram till t = 0.05 s, k2 = 100*k2,ref
 % normen av felet = max absolutbelopp av felet i z2 i intervallet
