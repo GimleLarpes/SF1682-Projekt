@@ -1,4 +1,4 @@
-function [vl,tl]=qc_inv_trap(tspan, h, v_vec, k1, k2, c1, c2, m1, m2, H, L, v)
+function [vl,tl]=qc_inv_trap(tspan, h, y, k1, k2, c1, c2, m1, m2, H, L, v)
     
     H_matrix = [0, 0, 1, 0;
                 0, 0, 0, 1;
@@ -8,6 +8,7 @@ function [vl,tl]=qc_inv_trap(tspan, h, v_vec, k1, k2, c1, c2, m1, m2, H, L, v)
     vl=[];
     tl=[];
     dt=h;
+    v_vec = y;
     t=tspan(1);
     while t<tspan(2)-h
         %Adjust step length to not overshoot
@@ -20,8 +21,8 @@ function [vl,tl]=qc_inv_trap(tspan, h, v_vec, k1, k2, c1, c2, m1, m2, H, L, v)
 
         dv = H_matrix*v_vec + g;
 
-        v_vec = v_vec + 0.5*dt * (H_matrix*v_vec + H_matrix*(v_vec + dv) + g + calc_g(t+dt, k2, c2, m2, H, L, v));
-        
+        v_vec = v_vec + 0.5*dt * (H_matrix*v_vec + H_matrix*(v_vec + dv*dt) + g + calc_g(t+dt, k2, c2, m2, H, L, v));
+
         vl = cat(2, vl, v_vec);
         tl = cat(2, tl, t);
         t=t+dt;
