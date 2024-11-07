@@ -1,24 +1,17 @@
-%% b) 
 z1=0; z2=0; zprick1=0; zprick2=0;
-m1=465; m2=55; k1=5350; k2=136100; c1=310; c2=1250; v=63/3.6; H=0.27; L=1.1;
-v_vec = [z1; z2; zprick1; zprick2];
+m1=465; m2=55; k1=5350; c1=310; c2=1250; v=63/3.6; H=0.27; L=1.1;
 t = 0;
-T = 10;
+T = 0.5;
 
-H_matrix = [0, 0, 1, 0;
-            0, 0, 0, 1;
-            -k1 / m1, k1 / m1, -c1 / m1, c1 / m1;
-            k1 / m1, -((k1 + k2) / m2), c1 / m2, -((c1 + c2) / m2)];
-eigenvalues = eig(H_matrix)
-max_eigenvalue = max(abs(eigenvalues))
-delta_t_max = 2 / max_eigenvalue
-
-%c)
+% c)
+k2 = 136100;
+delta_t_max = delta_t_calc(m1, m2, k1, k2, c1, c2)
 alpha = 0.9;
 delta_t = delta_t_max*alpha;
 i = 0;
-z1_vec=[];
-z2_vec=[];
+v_vec = [z1; z2; zprick1; zprick2];
+z1_vec_c=[];
+z2_vec_c=[];
 
 while t<T
     i = i+1;
@@ -27,35 +20,27 @@ while t<T
     v_vec = v_vec + dv*delta_t;
     t = t + delta_t;
 
-    z1_vec(i) = v_vec(1);
-    z2_vec(i) = v_vec(2);
+    z1_vec_c(i) = v_vec(1);
+    z2_vec_c(i) = v_vec(2);
 end
 
-v_vec
-
-plot(z1_vec)
+figure(1);
+plot(z1_vec_c)
 hold on
-plot(z2_vec)
+plot(z2_vec_c)
 legend({"z1", "z2"})
+title('Förflyttningarna z1 och z2 som funktion av tiden t')
+xlabel('t')
+ylabel('z(t)')
 
-%% d)
-z1=0; z2=0; zprick1=0; zprick2=0;
-m1=465; m2=55; k1=5350; k2=13610000; c1=310; c2=1250; v=63/3.6; H=0.27; L=1.1;
-v_vec = [z1; z2; zprick1; zprick2];
+%d)
+k2 = 13610000;
+delta_t_max = delta_t_calc(m1, m2, k1, k2, c1, c2)
 t = 0;
-T = 10;
-
-H_matrix = [0, 0, 1, 0;
-            0, 0, 0, 1;
-            -k1 / m1, k1 / m1, -c1 / m1, c1 / m1;
-            k1 / m1, -((k1 + k2) / m2), c1 / m2, -((c1 + c2) / m2)];
-eigenvalues = eig(H_matrix)
-max_eigenvalue = max(abs(eigenvalues))
-delta_t_max = 2 / max_eigenvalue
-
 i = 0;
-z1_vec=[];
-z2_vec=[];
+v_vec = [z1; z2; zprick1; zprick2];
+z1_vec_d=[];
+z2_vec_d=[];
 
 while t<T
     i = i+1;
@@ -64,14 +49,36 @@ while t<T
     v_vec = v_vec + dv*delta_t_max;
     t = t + delta_t_max;
 
-    z1_vec(i) = v_vec(1);
-    z2_vec(i) = v_vec(2);
+    z1_vec_d(i) = v_vec(1);
+    z2_vec_d(i) = v_vec(2);
 end
 
-v_vec
-
-plot(z1_vec)
+figure(2);
+plot(z1_vec_d)
 hold on
-plot(z2_vec)
+plot(z2_vec_d)
 legend({"z1", "z2"})
+title('Förflyttningarna z1 och z2 som funktion av tiden t')
+xlabel('t')
+ylabel('z(t)')
 
+% b)
+function delta_t_max = delta_t_calc(m1, m2, k1, k2, c1, c2)
+    H_matrix = [0, 0, 1, 0;
+            0, 0, 0, 1;
+            -k1 / m1, k1 / m1, -c1 / m1, c1 / m1;
+            k1 / m1, -((k1 + k2) / m2), c1 / m2, -((c1 + c2) / m2)];
+    eigenvalues = eig(H_matrix);
+
+    F = zeros(size(eigenvalues)); %F är funktionen F(lambda_k)
+    
+    for k = 1:length(eigenvalues)
+        lambda_k = eigenvalues(k);
+        real_part = real(lambda_k);
+        imag_part = imag(lambda_k);
+
+        F(k) = -2 * real_part / (real_part^2 + imag_part^2);
+    end
+
+    delta_t_max = min(F);
+end
