@@ -38,8 +38,8 @@ end
 %Plot
 hold on
 a=2;
-%plot(n0ZT,n0Z(a,:))
-%plot(n1ZT,n1Z(a,:))
+plot(n0ZT,n0Z(a,:))
+plot(n1ZT,n1Z(a,:))
 plot(n2ZT,n2Z(a,:))
 [Rt,Rv] = ode45(@(t,y) quartercar(t, y, k1, k2, c1, c2, m1, m2, H, L, v),tspan,v_vec0,options);
 plot(Rt, Rv(:,a))
