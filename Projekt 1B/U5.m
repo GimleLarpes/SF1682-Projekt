@@ -8,9 +8,9 @@
 z1 = 0; z2 = 0; zprick1 = 0; zprick2 = 0;
 m1 = 465; m2 = 55; k1 = 5350; k2 = 13610000; c1 = 310; c2 = 1250; v = 63/3.6; H = 0.27; L = 1.1;
 v_vec0 = [z1; z2; zprick1; zprick2];
-T = 0.05;
+T = 0.5;
 
-h_max = 0.0001;%0.0395; %deltatmax beräknat i U4
+h_max = 1.1458e-4;%0.0395; %deltatmax beräknat i U4
 tspan = [0, T];
 
 nZ=[];
@@ -41,8 +41,10 @@ a=2;
 plot(n0ZT,n0Z(a,:))
 plot(n1ZT,n1Z(a,:))
 plot(n2ZT,n2Z(a,:))
+options = odeset('RelTol',1e-9,'Refine',1);
 [Rt,Rv] = ode45(@(t,y) quartercar(t, y, k1, k2, c1, c2, m1, m2, H, L, v),tspan,v_vec0,options);
 plot(Rt, Rv(:,a))
+ylim([0,0.3])
 legend({"1*h_{max}", "10*h_{max}", "100*h_{max}", "ode45"})
 
 
@@ -51,8 +53,7 @@ legend({"1*h_{max}", "10*h_{max}", "100*h_{max}", "ode45"})
 
 %Beräknar exakt lösning
 tspan=[0,0.05];
-dt0 = 0.004;
-options = odeset('RelTol',1e-9,'Refine',1);
+dt0 = 0.001;
 
 [Rt,Rv] = ode45(@(t,y) quartercar(t, y, k1, k2, c1, c2, m1, m2, H, L, v),tspan,v_vec0,options);
 
@@ -63,13 +64,13 @@ options = odeset('RelTol',1e-9,'Refine',1);
 [e3Z,e3ZT] = qc_inv_trap(tspan, dt0/8, v_vec0, k1, k2, c1, c2, m1, m2, H, L, v);
 
 %Beräknar fel
-e0 = max(abs(e0Z(2,end)-Rv(2,end)));
-e1 = max(abs(e1Z(2,end)-Rv(2,end)));
-e2 = max(abs(e2Z(2,end)-Rv(2,end)));
-e3 = max(abs(e3Z(2,end)-Rv(2,end)));
+e0 = max(abs(e0Z(2,end)-Rv(2,end)))
+e1 = max(abs(e1Z(2,end)-Rv(2,end)))
+e2 = max(abs(e2Z(2,end)-Rv(2,end)))
+e3 = max(abs(e3Z(2,end)-Rv(2,end)))
 %Konvergensordning
 K=[];
-E=[e0,e1,e2,e3];
+E=[e3,e2,e1,e0];
 for i=3:length(E)
     p = log(E(i-1)/E(i)) / log(E(i-2)/E(i-1));
     K=[K,p];
