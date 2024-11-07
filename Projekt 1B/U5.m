@@ -10,7 +10,7 @@ m1 = 465; m2 = 55; k1 = 5350; k2 = 13610000; c1 = 310; c2 = 1250; v = 63/3.6; H 
 v_vec0 = [z1; z2; zprick1; zprick2];
 T = 0.5;
 
-h_max = 1.1458e-4;%0.0395; %deltatmax beräknat i U4
+h_max = 1.11458e-4;%0.0395; %deltatmax beräknat i U4
 tspan = [0, T];
 
 nZ=[];
