@@ -1,4 +1,6 @@
-% Tk(k1, k2) 70% av tidigare värdet
+% Tk(k1, k2) 70% av tidigare värdet. Ju mindre Tk desto större komfort. Tk
+% beskriver förflyttningen av passagerarna i förhållande till
+% vägunderlaget. 
 % Ts(k1,k2) oförändrat
 
 %skriv ett program som numeriskt beräknar k1 och k2 med newtons metod för
@@ -7,7 +9,7 @@
 % b) verifiera förväntad konvergensordning. Testa olika startgissningar. konvergerar metoden mot en annan lösning för någon startgissning?
 k1 = 5350;
 k2 = 136100;
-ck=1.7;
+ck=0.7;
 cs=1;
 tolerans = 10^(-6);
 
@@ -22,7 +24,7 @@ while err>tolerans
 F = transfer_functions(x0(1), x0(2), ck, cs);
 J = Jacobian_transfer_functions(x0(1), x0(2));
 
-dx = -J\F;
+dx = -J\F; 
 % rot = x0 - J^(-1)*F
 
 x1 = x0+dx;
@@ -51,7 +53,7 @@ end
 % stämmer resultatet överens med uppgiften att öka komforten?
 
 z1=0; z2=0; zprick1=0; zprick2=0; z=0;
-m1=465; m2=55; k1=11822.4241; k2=74834.1359; c1=310; c2=1250; v=63/3.6; H=0.27; L=1.1;
+m1=465; m2=55; k1=640.805; k2=185118.1252; c1=310; c2=1250; v=63/3.6; H=0.27; L=1.1;
 v_vec = [z1; z2; zprick1; zprick2];
 tspan = [0 0.5];
 
