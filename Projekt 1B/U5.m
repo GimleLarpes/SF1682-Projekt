@@ -52,25 +52,23 @@ legend({"1*h_{max}", "10*h_{max}", "100*h_{max}", "ode45"})
 % normen av felet = max absolutbelopp av felet i z2 i intervallet
 
 %Beräknar exakt lösning
-tspan=[0,0.05];
+E=[];
 dt0 = 0.001;
-
+tspan=[0:dt0/8:0.05];
 [Rt,Rv] = ode45(@(t,y) quartercar(t, y, k1, k2, c1, c2, m1, m2, H, L, v),tspan,v_vec0,options);
+for n=3:-1:0
+    [eZ,eZT] = qc_inv_trap(tspan, dt0/2^n, v_vec0, k1, k2, c1, c2, m1, m2, H, L, v);
+    
+    eV=[];
+    for i=1:length(eZT)
+        Rti = find(min(abs(Rt-eZT(i)))==abs(Rt-eZT(i))); % Find med exakta värden fungerar inte, så använder närmaste värdet istället
+        eV = cat(2, eV, abs(eZ(2,i)-Rv(Rti,2)));
+    end
+    E = cat(2, E, max(eV));
+end
 
-%Olika dt
-[e0Z,e0ZT] = qc_inv_trap(tspan, dt0, v_vec0, k1, k2, c1, c2, m1, m2, H, L, v);
-[e1Z,e1ZT] = qc_inv_trap(tspan, dt0/2, v_vec0, k1, k2, c1, c2, m1, m2, H, L, v);
-[e2Z,e2ZT] = qc_inv_trap(tspan, dt0/4, v_vec0, k1, k2, c1, c2, m1, m2, H, L, v);
-[e3Z,e3ZT] = qc_inv_trap(tspan, dt0/8, v_vec0, k1, k2, c1, c2, m1, m2, H, L, v);
-
-%Beräknar fel
-e0 = max(abs(e0Z(2,end)-Rv(2,end)))
-e1 = max(abs(e1Z(2,end)-Rv(2,end)))
-e2 = max(abs(e2Z(2,end)-Rv(2,end)))
-e3 = max(abs(e3Z(2,end)-Rv(2,end)))
 %Konvergensordning
 K=[];
-E=[e3,e2,e1,e0];
 for i=3:length(E)
     p = log(E(i-1)/E(i)) / log(E(i-2)/E(i-1));
     K=[K,p];
