@@ -57,12 +57,18 @@ dt0 = 0.001;
 tspan=[0:dt0/8:0.05];
 [Rt,Rv] = ode45(@(t,y) quartercar(t, y, k1, k2, c1, c2, m1, m2, H, L, v),tspan,v_vec0,options);
 for n=3:-1:0
+    % alpha = 1/2^n
+    % Alltså:
+    %    n=0: alpha = 1
+    %    n=1: alpha = 1/2
+    %    n=2: alpha = 1/4
+    %    n=3: alpha = 1/8
     [eZ,eZT] = qc_inv_trap(tspan, dt0/2^n, v_vec0, k1, k2, c1, c2, m1, m2, H, L, v);
     
     eV=[];
     for i=1:length(eZT)
         Rti = find(min(abs(Rt-eZT(i)))==abs(Rt-eZT(i))); % Find med exakta värden fungerar inte, så använder närmaste värdet istället
-        eV = cat(2, eV, abs(eZ(2,i)-Rv(Rti,2)));
+        eV = cat(2, eV, abs(eZ(2,i)-Rv(Rti,2))); % Tar största felet för z2 i intervallet
     end
     E = cat(2, E, max(eV));
 end
