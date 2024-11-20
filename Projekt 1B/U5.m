@@ -75,7 +75,7 @@ end
 
 %Konvergensordning
 K=[];
-for i=3:length(E)
+for i=3:length(E) % E är en vektor med största felet för alpha = 1, 1/2 ,1/4, 1/8
     p = log(E(i-1)/E(i)) / log(E(i-2)/E(i-1));
     K=[K,p];
 end
