@@ -8,56 +8,36 @@
 %b) Diskretisera randv ̈ardesproblemet med finita differens approximationer enligt ovan och
 %formulera det linj ̈ara ekvationssystemet som ska l ̈osas p ̊a formen (11) f ̈or godtyckligt N .
 
-% n = 1 till n = N-1
-
-% [48h^2 - 2 1 0 ... 0        [u0          [2γh + 3dh^2cos(2x1)
-% 1 48h^2 -2 1 0 ... 0         u1           dh^2cos(2x2)
-% 0 1 48h^2 -2 1 0 ... 0     u2           dh^2cos(2x3)
-% 0 0 1 48h^2 -2 1 0 ... 0    .        =  dh^2cos(2x4)
-% .                               .             .
-% .                               .             .
-% .                               .             .
-% 0 ... 0 1 -2 + 48h^2]           u_N-1]      dh^2cos(2x_N-1) - δ]
+% se matris
 
 %% c) Skriv ett MATLAB-program som f ̈or ett givet N , f (x) och v ̈arden p ̊a γ och δ ber ̈aknar
 %en numerisk approximation till randv ̈ardesproblemet.
 
-% väljer N=5, f(x) = 5cos(2x) (d = 5), δ = 1, γ = 1.
-
+% väljer N=1000, f(x) = 5cos(2x) (d = 5), δ = 1, γ = 1.
 a=0;
 b=2*pi;
-N=5;
-h=(b-a)/(N-1);
-x=[a:h:b];
-f = 5*cos(2*x(1:end));
+d=5;
+N=1000;
+gamma=1;
+delta=1;
+h=(b-a)/N;
+x=linspace(a+h, b-h, N-1);
 
-A = zeros(N,N);
+f = d*cos(2*x);
 
-for i = 1:N
-    if i > 1
-        A(i, i-1) = 1;
-    end
+A = full(gallery('tridiag', N-1, h^(-2), (16 - (2*h^(-2))), h^(-2)));
 
-    A(i,i) = 16*h^2 - 2;
+A(1,1) = 16 - (2/(3*h^(2)));
+A(1,2) = 2/(3*h^(2));
+%A(end, end-2) = 0;
 
-    if i < N
-        A(i, i+1) = 1;
-    end
+f(1) = f(1) + 2/(3*h)*gamma;
+f(end) = f(end) - (delta*h^(-2));
 
-       
-end
+u = A \ f';
 
-b_vec = f(:);
-b_vec(1) = 2*h + 15*cos(2*x(1))*h^2;
-b_vec(end) = 5*cos(2*x(end-1))*h^2 - 1;
-
-u_inre = A \ b_vec;
-
-u0 = 0; % placeholder
-
-% u = [u0, u_inre', 1]; lägg till RV också
-
-plot(x, u_inre)
+plot(x, u, 'b')
+legend(' Numerisk lösning för N=1000')
 
 %% d) L ̊at f (x) vara som i (a) med d = 5 och s ̈att γ = 1, δ = 1. L ̈os problemet med N = 400,
 %plotta den numeriska approximationen samt den analytiska l ̈osningen i samma plot  ̈over
@@ -65,110 +45,133 @@ plot(x, u_inre)
 
 a=0;
 b=2*pi;
+d=5;
 N=400;
-h=(b-a)/(N-1);
-x=[a:h:b];
+gamma=1;
+delta=1;
+h=(b-a)/N;
+x=linspace(a+h, b-h, N-1);
 
-f = 5*cos(2*x(1:end));
+f = d*cos(2*x);
 
-A = zeros(N,N);
+A = full(gallery('tridiag', N-1, h^(-2), (16 - (2*h^(-2))), h^(-2)));
 
-for i = 1:N
-    if i > 1
-        A(i, i-1) = 1;
-    end
+A(1,1) = 16 - (2/(3*h^(2)));
+A(1,2) = 2/(3*h^(2));
+%A(end, end-2) = 0;
 
-    A(i,i) = 16*h^2 - 2;
+f(1) = f(1) + 2/(3*h)*gamma;
+f(end) = f(end) - (delta*h^(-2));
 
-    if i < N
-        A(i, i+1) = 1;
-    end
-
-       
-end
-
-b_vec = f(:);
-b_vec(1) = 2*h + 15*cos(2*x(1))*h^2; % x0 = 0, cos(0) = 1
-b_vec(N) = b_vec(N) - 1;
-
-u_inre = A \ b_vec;
-
-u0 = b_vec(1)-h; % från linjär approximation
-uN = 1;
-u_inre = [u0, u_inre', uN]; 
-%u = u_inre;
+u = A \ f';
 
 % analytiska lösningen 
-h = 2*pi/400;
-U=[];
-for x=0:h:2*pi+h % obs fifflad
-u = 1/4*sin(4*x) + 7/12*cos(4*x) + 5/12*cos(2*x);
-U=[U, u];
+
+ua = (gamma/4)*sin(4*x) + (delta - d/12)*cos(4*x) + (d/12)*cos(2*x);
+
+figure
+plot(x, u, 'b')
+hold on
+plot(x, ua, 'r--')
+legend({'Numerisk lösning', 'analytisk lösning'})
+
+% fel
+
+F=[];
+for i=1:length(x)
+    fel = ua(i)-u(i);
+    F=[F, fel];
+
 end
 
-x=[a:h:b+h]; % plottar mellan 0 till 2pi
 
-
-plot(x, u_inre)
-hold on
-plot(x, U)
-legend({'Numerisk lösning', 'analytisk lösning'})
+figure
+plot(x, F)
+xlabel('x')
+ylabel('fel')
+legend('Fel mellan analytisk och numerisk lösning')
 
 %% e) F ̈or data som i (d), ber ̈akna det diskreta 2-felet i den numeriska approximationen f ̈or
 %N = 50, 100, 200, 400, 800. Ber ̈akna noggrannhetsordning f ̈or metoden baserat p ̊a dessa
 %resultat. Beskriv hur du g ̊att till v ̈aga, och presentera uppm ̈atta fel och noggrannhet-
 %sordning i en tabell.
 
-for N=[50 100 200 400 800]
 a=0;
 b=2*pi;
-h=(b-a)/(N-1);
-x=[a:h:b];
+d=5;
+gamma=1;
+delta=1;
 
-f = 5*cos(2*x(1:end));
+N_vec = [50, 100, 200, 400, 800];
 
-A = zeros(N,N);
+nog_ord=[length(N_vec), 1];
 
-for i = 1:N
-    if i > 1
-        A(i, i-1) = 1;
-    end
+for i=1:length(N_vec)
 
-    A(i,i) = 16*h^2 - 2;
+N=N_vec(i);
+h=(b-a)/N;
+x=linspace(a+h, b-h, N-1);
 
-    if i < N
-        A(i, i+1) = 1;
-    end
+f = d*cos(2*x);
 
-       
-end
+A = full(gallery('tridiag', N-1, h^(-2), (16 - (2*h^(-2))), h^(-2)));
+A(1,1) = 16 - (2/(3*h^(2)));
+A(1,2) = 2/(3*h^(2));
 
-b_vec = f(:);
-b_vec(1) = 2*h + 15*cos(2*x(1))*h^2; % x0 = 0, cos(0) = 1
-b_vec(N) = b_vec(N) - 1;
+f(1) = f(1) + 2/(3*h)*gamma;
+f(end) = f(end) - (delta*h^(-2));
 
-u_inre = A \ b_vec;
-
-u0 = b_vec(1)-h; % från linjär approximation
-uN = 1;
-u_inre = [u0, u_inre', uN]; 
-
-%u = u_inre;
+u = A \ f';
 
 % analytiska lösningen 
-h = 2*pi/N;
-U=[];
-for x=0:h:2*pi+h % obs fifflad
-u = 1/4*sin(4*x) + 7/12*cos(4*x) + 5/12*cos(2*x);
-U=[U, u];
+
+ua = ((gamma/4)*sin(4*x) + (delta - d/12)*cos(4*x) + (d/12)*cos(2*x))';
+
+DF(i) = sqrt( sum( (u-ua).^2 )/ (N+1) );
+
+if i>1
+
+nog_ord(i) = log(DF(i-1)/DF(i)) / log(2);
+nog_ord(i-1) = log(DF(i-1)/DF(i)) / log(2);
+
 end
 
 end
+
+T = table(N_vec', DF', nog_ord', 'VariableNames', {'N', 'diskreta 2-normen', 'Noggrannhetsordning'});
+disp(T)
+
 
 %% f) F ̈or f (x) = e−(x−π)2
 %ber ̈akna en numerisk approximation till l ̈osningen med:
 % (i) γ = 0, δ = 0 och 
 % (ii) γ = 1, δ = 0. Plotta b ̊ada l ̈osningarna i en figur och kommentera p ̊a
 %skillnaden.
+
+a=0;
+b=2*pi;
+d=5;
+N=400;
+gamma=[0, 1];
+delta=0;
+h=(b-a)/N;
+x=linspace(a+h, b-h, N-1);
+f = exp(-(x-pi).^2);
+
+A = full(gallery('tridiag', N-1, h^(-2), (16 - (2*h^(-2))), h^(-2)));
+
+A(1,1) = 16 - (2/(3*h^(2)));
+A(1,2) = 2/(3*h^(2));
+
+for i=1:2
+f(1) = f(1) + 2/(3*h)*gamma(i);
+f(end) = f(end) - (delta*h^(-2));
+
+u = A \ f';
+plot(x,u)
+hold on
+end
+
+legend('γ=δ=0', 'γ=1, δ=0')
 
 
