@@ -1,0 +1,72 @@
+%Definitionsmängder
+xl = 0; xr = 1;
+yb = 0; yt = 0.1;
+
+N_vec = [10 20 40 80 160];
+fel = zeros(length(N_vec), 1);
+
+%Dirichlet randvillkor
+x0 = @(t) 0 * t;
+x1 = @(t) sin(exp(t));
+
+f = @(x, t) exp(t).*x.*cos(exp(t).*x) + exp(2*t).*sin(exp(t).*x);
+D = 1;
+
+for i = 1:length(N_vec)
+N = N_vec(i);    % antal steg i t
+M = 100;   % antal steg i x
+h = (xr-xl)/ N;         % steglängd i x
+k = 0.5*h^2;         % steglängd i t, justerad så att sigma alltid är 0.5
+sigma = D * k / (h^2);   %stabilitet
+
+%Diskretiseringar
+x = xl + (0:M) * h;
+t = yb + (0:N) * k;
+
+A = diag(2+2*sigma*ones(M-1,1)) + diag(-sigma*ones(M-2,1),1) + diag(-sigma*ones(M-2,1),-1);
+B = diag(2-2*sigma*ones(M-1,1)) + diag(sigma*ones(M-2,1),1) + diag(sigma*ones(M-2,1),-1);
+
+lside = x0(yb + (0:N) * k);
+rside = x1(yb + (0:N) * k);
+
+w = zeros(M + 1, N + 1);      %Skapar lösningsmatris w med insatta R.V och B.V
+w(:,1)= sin(x);
+w(1, :) = lside;
+w(end, :) = rside;
+
+for j = 1:N
+    sides = [lside(j) + lside(j+1); zeros(M-3, 1); rside(j) + rside(j+1)];
+    f_eval = f(x(2:end-1),t(j))+f(x(2:end-1),t(1+j));
+
+    w(2:end-1, j+1) = A \ (B * w(2:end-1, j) + sigma*sides + k*f_eval');
+end
+
+% Lösningar vid T=1
+T=1;
+cn_solution = w(:, end);
+analytic_solution = sin(exp(T) * x)';
+
+error = abs(analytic_solution - cn_solution);
+fel(i) = sqrt(sum(error.^2)*h); %diskret 2-norm
+
+end
+
+P=[];
+for i = 2:length(fel)
+K = log2(fel(i-1)/fel(i));
+P = [P,K];
+end
+
+Tabell = table(N_vec', fel, [NaN; P'], 'VariableNames', {'N', 'Fel', 'Konvergensordning'});
+disp(Tabell)
+
+figure;
+loglog(N_vec, fel, 'b');
+hold on;
+
+loglog(N_vec, exp(polyval(coeffs, log(N_vec))), 'r');
+legend('Numeriska fel', sprintf('Lutning = %.2f', coeffs(1)));
+xlabel('N (antal tidssteg)');
+ylabel('Felet (diskret 2-norm)');
+title('Konvergensstudie för Crank-Nicholson');
+grid on;
