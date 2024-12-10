@@ -59,14 +59,3 @@ end
 
 Tabell = table(N_vec', fel, [NaN; P'], 'VariableNames', {'N', 'Fel', 'Konvergensordning'});
 disp(Tabell)
-
-figure;
-loglog(N_vec, fel, 'b');
-hold on;
-
-loglog(N_vec, exp(polyval(coeffs, log(N_vec))), 'r');
-legend('Numeriska fel', sprintf('Lutning = %.2f', coeffs(1)));
-xlabel('N (antal tidssteg)');
-ylabel('Felet (diskret 2-norm)');
-title('Konvergensstudie för Crank-Nicholson');
-grid on;
