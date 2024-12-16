@@ -1,6 +1,6 @@
 %Definitionsmängder
 xl = 0; xr = 1;
-yb = 0; yt = 0.1;
+yb = 0; yt = 1;
 
 N_vec = [10 20 40 80 160];
 fel = zeros(length(N_vec), 1);
@@ -14,10 +14,10 @@ D = 1;
 
 for i = 1:length(N_vec)
 N = N_vec(i);    % antal steg i t
-M = 100;   % antal steg i x
+M = N;   % antal steg i x
 h = (xr-xl)/ N;         % steglängd i x
-k = 0.5*h^2;         % steglängd i t, justerad så att sigma alltid är 0.5
-sigma = D * k / (h^2);   %stabilitet
+k = (yt-yb)/N;         % steglängd i t, justerad så att sigma alltid är 0.5
+sigma = D * k / (h^2)   %stabilitet
 
 %Diskretiseringar
 x = xl + (0:M) * h;
