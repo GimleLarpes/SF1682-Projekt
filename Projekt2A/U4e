@@ -13,11 +13,11 @@ f = @(x, t) exp(t).*x.*cos(exp(t).*x) + exp(2*t).*sin(exp(t).*x);
 D = 1;
 
 for i = 1:length(N_vec)
-N = N_vec(i);    % antal steg i t
-M = N;   % antal steg i x
-h = (xr-xl)/ N;         % steglängd i x
-k = (yt-yb)/N;         % steglängd i t, justerad så att sigma alltid är 0.5
-sigma = D * k / (h^2)   %stabilitet
+N = N_vec(i);            % antal steg i t
+M = N;                   % antal steg i x
+h = (xr-xl)/ N;          % steglängd i x
+k = (yt-yb)/N;           % steglängd i t
+sigma = D * k / (h^2);   %stabilitet
 
 %Diskretiseringar
 x = xl + (0:M) * h;
