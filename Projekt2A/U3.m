@@ -1,7 +1,7 @@
 clear all
 N = 100; % Spacial resolution
 M = 1000; % Temporal resolution
-T = 0.01; % End time
+T = 0.01; st=18e-5;% End time
 D = 1;
 L=0;
 R=0;
@@ -23,7 +23,7 @@ u_vec = w_vec(2:end-1);
 
 % Step
 w = [w_vec];
-for t=18*dt:dt:T 
+for t=st:dt:T
 
    u_vec = u_vec + dt * (D/(dx^2) * (A*u_vec + g) + f);
     
