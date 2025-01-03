@@ -1,36 +1,48 @@
 % Parametrar
-N = 16;                    % Antal punkter
-t = 0.1;                   % Tidsvärde
-x = linspace(0, 1, N);     % Diskretisering av x-intervallet [0, 1]
+N = 16;                   
+t = 0.1;               
+x = linspace(0, 1, N+1) ;  
+x(end) = [];
+D = 1;
 
-% Den exakta lösningen u(x,t)
-u_a = exp(-4 * t * pi^2) * sin(2 * pi * x);
+% analytiska lösningen
+u_a = exp(-D*(2*pi)^2 * t) * sin(2 * pi * x);
 
-% Fouriertransform av initialvillkoret (t = 0)
-% Initialtillståndet är u(x,0) = sin(2 * pi * x)
-u0 = sin(2 * pi * x);
+% initialvillkor
 
-% Beräkna Fourierkoefficienter av u0 (FFT)
-u0_hat = fft(u0);
+u0 = sin(2*pi*x);
 
-% Tidsutveckling av Fourierkoefficienterna
-% Exponentiell faktor för varje Fourierkomponent
-k = (0:N-1);  % Vågrökningsnummer
-k = k - floor(N/2);  % Justera så att k går från -N/2 till N/2-1
-u_hat_t = u0_hat .* exp(-4 * t * pi^2 * k.^2);  % FFT av lösningen vid tid t
+u0_hat = fftshift(fft(u0)) / N;
 
-% Återställ lösningen i den fysiska domänen (IFFT)
-u_fft = ifft(u_hat_t);
 
-% Plot den exakta lösningen och FFT-lösningen
+k = (-N/2:(N/2-1));
+u_hat_t = u0_hat .* exp(-D * (2*pi*k).^2 * t);  % FFT av lösningen vid tid t
+
+u_fft = real(ifft(ifftshift(u_hat_t)*N));
+
+% Plot på den exakta lösningen och FFT-lösningen
 figure;
 subplot(2,1,1);
-plot(x, u_a, 'r', 'DisplayName', 'Exakt lösning');
+plot(x, u_fft, 'm', 'DisplayName', 'FFT lösning', 'LineWidth', 2);
 hold on;
-plot(x, real(u_fft), 'b', 'DisplayName', 'FFT lösning');
+plot(x, u_a, 'k--', 'DisplayName', 'Exakt lösning', 'LineWidth', 2);
 legend;
 title('Exakt lösning vs FFT-lösning');
 xlabel('x');
+ylabel('u(x,t)');
+grid on;
+
+% Fel
+error = abs(u_a - u_fft);
+
+%Fel plot
+
+subplot(2,1,2);
+plot(x, error, 'b', 'DisplayName', 'Fel i FFT lösning');
+title('Fel mellan exakt lösning och FFT lösning');
+xlabel('x');
+ylabel('Fel');
+grid on;
 ylabel('u(x,t)');
 grid on;
 
