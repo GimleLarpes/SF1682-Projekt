@@ -6,7 +6,7 @@ x_ref(end) = [];
 D = 1;
 
 % initialvillkor
-u0_ref = etafcn(x_ref,0.05);
+u0_ref = etafcn(x_ref,0.05,400);
 u0_hat_ref = fftshift(fft(u0_ref)) / N_ref;
 
 k = (-N_ref/2:(N_ref/2-1));
@@ -24,7 +24,7 @@ for i=1:length(m)
     x = linspace(0, 1, N+1);  
     x(end) = [];
 
-    u0 = etafcn(x,0.05);
+    u0 = etafcn(x,0.05,400);
     u0_hat = fftshift(fft(u0)) / N;
 
     k = (-N/2:(N/2-1));
