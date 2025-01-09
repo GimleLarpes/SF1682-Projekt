@@ -6,7 +6,7 @@ D=1;
 % Time
 T=0.1; dt=1e-3;
 
-% Space (-L/2,L/2)
+% Space
 L=1; N=16;
 x=L*[0:N-1]/N;
 dx=L/N;
