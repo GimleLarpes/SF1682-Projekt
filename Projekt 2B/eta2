@@ -1,0 +1,14 @@
+function etav = etafcn(yv,delta)
+    a = 1-2*delta;
+    h = @(s) exp(2.*exp(-1./s)./(s-1+eps));
+    etav = zeros(size(yv));
+
+    %0 <= y <= delta
+    etav(yv >= 0 & yv <= delta+eps) = 1;
+    
+    %delta < y < 1 - delta
+    range = yv > delta + eps & yv < 1 - delta - eps;
+    s1 = (yv(range)-delta)/a;
+    s2 = 1-s1;
+    etav(range) = h(s1)./(h(s1)+h(s2));
+end
