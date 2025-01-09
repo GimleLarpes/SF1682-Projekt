@@ -34,8 +34,6 @@ for i=1:length(m)
 
     u_fft_ref_interp = interp1(x_ref, u_fft_ref, x, 'linear'); % Estimerar värdet av u_fft_ref i
     % x-diskretiseringarna istället för x_ref. 
-    size(u_fft_ref_interp)
-    size(u_fft)
     error(i) = sqrt(sum(abs(u_fft_ref_interp-u_fft))/N);
     if i > 2
         convergence(i) = log(error(i-1)/error(i))/log(error(i-2)/error(i-1));
