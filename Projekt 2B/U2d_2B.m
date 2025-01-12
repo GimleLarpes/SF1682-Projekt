@@ -1,12 +1,11 @@
 % Parametrar
 N_ref = 2048;                   
 t = 0.1;               
-x_ref = linspace(0, 1, N_ref+1) ;  
-x_ref(end) = [];
+x_ref = linspace(0, 1, N_ref) ;  
 D = 1;
 
 % initialvillkor
-u0_ref = etafcn(x_ref,0.05,400);
+u0_ref = etafcn(x_ref,0.05);
 u0_hat_ref = fftshift(fft(u0_ref)) / N_ref;
 
 k = (-N_ref/2:(N_ref/2-1));
@@ -21,10 +20,9 @@ error = zeros(1,length(m));
 
 for i=1:length(m)
     N = 2^m(i);
-    x = linspace(0, 1, N+1);  
-    x(end) = [];
+    x = linspace(0, 1, N);  
 
-    u0 = etafcn(x,0.05,400);
+    u0 = etafcn(x,0.05);
     u0_hat = fftshift(fft(u0)) / N;
 
     k = (-N/2:(N/2-1));
@@ -40,7 +38,6 @@ for i=1:length(m)
     end
 end
 max(error)
-convergence
 figure
 plot(u_fft,'--'); hold on
 plot(u_fft_ref_interp)
@@ -48,4 +45,3 @@ figure
 loglog(2.^m,error)
 title("Felet e som funktion av antalet diskretiseringar N")
 ylabel("e(N)"); xlabel("N")
-
